@@ -1,8 +1,15 @@
 """
 remove.bg API 背景移除服务
 """
+import os
+
 import httpx
 from typing import Optional
+
+
+def _api_base() -> str:
+    """Base URL of the remove.bg API; set REMOVEBG_API_URL to use another API that accepts the same requests."""
+    return os.getenv("REMOVEBG_API_URL", "").rstrip("/") or "https://api.remove.bg/v1.0"
 
 
 async def remove_background_api(
@@ -27,7 +34,7 @@ async def remove_background_api(
     if not api_key:
         raise ValueError("未配置 remove.bg API Key")
     
-    url = "https://api.remove.bg/v1.0/removebg"
+    url = f"{_api_base()}/removebg"
     
     headers = {
         "X-API-Key": api_key
@@ -70,7 +77,7 @@ def get_remaining_credits(api_key: str) -> Optional[int]:
     """
     import requests
     
-    url = "https://api.remove.bg/v1.0/account"
+    url = f"{_api_base()}/account"
     headers = {"X-API-Key": api_key}
     
     try:
